@@ -1,0 +1,26 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: user-service
+
+  data:
+    mongodb:
+      host: localhost
+      uri: mongodb://farmer_user:farmer_pass@localhost:27017/farmermart
+      database: farmermart
+
+
+
+
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka/
+
+#
+#logging:
+#  level:
+#    org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl: DEBUG
+#    com.zaxxer.hikari: DEBUG
