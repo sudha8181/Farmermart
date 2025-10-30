@@ -1,13 +1,12 @@
 package com.tek.FarmerMart.UserMgmt.model;
 
+import com.tek.FarmerMart.UserMgmt.audit.Auditable;
 import com.tek.FarmerMart.UserMgmt.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -20,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User extends Auditable {
 
     @Id
     private String userId;
@@ -44,10 +43,18 @@ public class User {
     @DBRef(lazy = true)
     private List<OrderSummary> orderHistory;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+
+//    @CreatedBy
+//    private String createdBy;
+//
+//    @CreatedDate
+//    private LocalDateTime createdDate;
+//
+//    @LastModifiedDate
+//    private LocalDateTime lastModifiedDate;
+//
+//    @LastModifiedBy
+//    private String lastModifiedBy;
 
 }
 

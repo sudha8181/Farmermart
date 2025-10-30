@@ -9,11 +9,12 @@ import com.tek.FarmerMart.UserMgmt.dto.response.UserRegistrationResponseDto;
 import com.tek.FarmerMart.UserMgmt.service.imp.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/user")
 public class UserController {
 

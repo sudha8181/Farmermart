@@ -6,9 +6,11 @@ import com.tek.FarmerMart.UserMgmt.dto.request.UserRegistrationRequestDto;
 import com.tek.FarmerMart.UserMgmt.dto.request.UserVendorDto;
 import com.tek.FarmerMart.UserMgmt.dto.response.UserProfileResponseDto;
 import com.tek.FarmerMart.UserMgmt.dto.response.UserRegistrationResponseDto;
+import com.tek.FarmerMart.UserMgmt.model.User;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -26,4 +28,8 @@ public interface UserService {
     public ResponseEntity<UserProfileResponseDto> updateProfile(String id, UserProfileRequestDto request);
 
     public ResponseEntity<String> UserToVendor(UserVendorDto request);
+
+    Optional<User> getByFirstName(String firstName);
+
+    public void deleteByUserId(String s);
 }

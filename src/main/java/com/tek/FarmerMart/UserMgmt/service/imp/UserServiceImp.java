@@ -8,6 +8,9 @@ import com.tek.FarmerMart.UserMgmt.dto.response.UserProfileResponseDto;
 import com.tek.FarmerMart.UserMgmt.dto.response.UserRegistrationResponseDto;
 import com.tek.FarmerMart.UserMgmt.exception.user.PasswordMisMatchException;
 import com.tek.FarmerMart.UserMgmt.exception.user.UserNotFoundException;
+import com.tek.FarmerMart.UserMgmt.exception.vendor.AadhaarNumberException;
+import com.tek.FarmerMart.UserMgmt.exception.vendor.PhoneNumberException;
+import com.tek.FarmerMart.UserMgmt.exception.vendor.VendorNotFoundException;
 import com.tek.FarmerMart.UserMgmt.model.User;
 import com.tek.FarmerMart.UserMgmt.model.Vendor;
 import com.tek.FarmerMart.UserMgmt.repository.UserRepo;
@@ -36,15 +39,29 @@ public class UserServiceImp implements UserService {
     private final VendorRepository vendorRepo;
     private final ModelMapper modelMapper;
     private final SequenceGeneratorService service;
-    private String generateUUID() {
-        return "USR-" + UUID.randomUUID().toString().substring(0,5).toUpperCase();
-    }
+
+
+//    private String generateUUID() {
+//        return "USR-" + UUID.randomUUID().toString().substring(0,5).toUpperCase();
+//    }
+
+
+//    @Autowired
+//    public UserServiceImp(UserRepo userRepo, ModelMapper modelMapper) {
+//        this.userRepo = userRepo;
+//        this.modelMapper = modelMapper;
+//    }
 
     @Override
     public ResponseEntity<UserRegistrationResponseDto> signup(UserRegistrationRequestDto request) {
 
         if(userRepo.getByEmail(request.getEmail()).isPresent()) {
             throw new UserNotFoundException("User is already exists");
+        }
+
+
+        if (request.getPhoneNo() != null && userRepo.findByPhoneNo(request.getPhoneNo()).isPresent()) {
+            throw new PhoneNumberException("User with this phone number already exists");
         }
 
         if(!request.getPassword().equals(request.getConfirmPassword())){
@@ -56,7 +73,7 @@ public class UserServiceImp implements UserService {
         long seq = service.getNextSequence("user_seq");
         user.setUserId(String.format("USR%03d", seq));
        // user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setCreatedAt(LocalDateTime.now());
+//        user.setCreatedAt(LocalDateTime.now());
         user.setActive(true);
         User user1=userRepo.save(user);
 
@@ -164,7 +181,7 @@ public class UserServiceImp implements UserService {
         if(request.getPassword()!=null){
             existinguser.setPassword(request.getPassword());
         }
-        existinguser.setUpdatedAt(LocalDateTime.now());
+//        existinguser.setUpdatedAt(LocalDateTime.now());
 
 
 
@@ -187,7 +204,7 @@ public class UserServiceImp implements UserService {
         vendor.setLinkedUserId(user.getUserId());
         vendor.setBankAccounts(user.getBankAccounts());
         vendor.setPassword(user.getPassword());
-        vendor.setCreatedAt(LocalDateTime.now());
+//        vendor.setCreatedAt(LocalDateTime.now());
         vendor.setVerified(false);
         vendorRepo.save(vendor);
 
@@ -195,7 +212,15 @@ public class UserServiceImp implements UserService {
 
     }
 
+    @Override
+    public Optional<User> getByFirstName(String firstName) {
+        return userRepo.getByFirstName(firstName);
+    }
 
+    @Override
+    public void deleteByUserId(String s) {
+        userRepo.deleteById(s);
+    }
 
 
 }

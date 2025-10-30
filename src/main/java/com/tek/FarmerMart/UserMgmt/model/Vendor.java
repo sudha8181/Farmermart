@@ -1,5 +1,6 @@
 package com.tek.FarmerMart.UserMgmt.model;
 
+import com.tek.FarmerMart.UserMgmt.audit.Auditable;
 import com.tek.FarmerMart.UserMgmt.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Vendor {
+public class Vendor extends Auditable {
 
     @Id
     private String vendorId;
@@ -46,10 +47,10 @@ public class Vendor {
     @DBRef
     private List<Product> products;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+//    @CreatedDate
+//    private LocalDateTime createdAt;
+//    @LastModifiedDate
+//    private LocalDateTime updatedAt;
 
 }
 

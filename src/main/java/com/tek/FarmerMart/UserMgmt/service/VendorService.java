@@ -25,7 +25,7 @@ public interface VendorService {
     ResponseEntity<VendorResponseDto> getVendorByLinkedUserId(String linkedUsrId);
     ResponseEntity<List<VendorResponseDto>> getAllVendors();
     ResponseEntity<VendorResponseDto> updateVendor(String id, VendorRequestDto requestDto);
-    ResponseEntity<Void> deleteVendor(String id);
+    ResponseEntity<String> deleteVendor(String id);
 
     // Verification
     ResponseEntity<List<VendorResponseDto>> getVerifiedVendors();

@@ -14,5 +14,5 @@ public class UserRegistrationResponseDto {
     private String email;
     private String phoneNo;
     private Boolean active;
-    private LocalDateTime createdAt;
+//    private LocalDateTime createdAt;
 }

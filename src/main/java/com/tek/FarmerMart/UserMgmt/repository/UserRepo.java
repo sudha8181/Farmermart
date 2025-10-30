@@ -22,6 +22,8 @@ public interface UserRepo extends MongoRepository<User,String> {
 
     Optional<User> findByEmail(String email);
 
+    Optional<User> findByPhoneNo(String phoneNo);
+
     @Query("{ 'email': ?0 }")
     User getUser(String email);
 
@@ -29,4 +31,8 @@ public interface UserRepo extends MongoRepository<User,String> {
     List<User> getAllUser();
 
     Optional<User> findByUserId(String userId);
+
+    User findByFirstName(String firstName);
+
+
 }

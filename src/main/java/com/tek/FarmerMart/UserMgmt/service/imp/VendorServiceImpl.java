@@ -9,9 +9,11 @@ import com.tek.FarmerMart.UserMgmt.model.Address;
 import com.tek.FarmerMart.UserMgmt.model.BankAccount;
 import com.tek.FarmerMart.UserMgmt.model.Vendor;
 import com.tek.FarmerMart.UserMgmt.repository.VendorRepository;
+import com.tek.FarmerMart.UserMgmt.service.SequenceGeneratorService;
 import com.tek.FarmerMart.UserMgmt.service.VendorService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,8 +28,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class VendorServiceImpl implements VendorService {
 
-    private final VendorRepository vendorRepository;
+    @Autowired
+    private  final VendorRepository vendorRepository;
     private final ModelMapper modelMapper;
+    private final SequenceGeneratorService service;
 
     // Vendor CRUD Operations
 
@@ -45,7 +49,9 @@ public class VendorServiceImpl implements VendorService {
         }
 
         Vendor vendor = modelMapper.map(requestDto, Vendor.class);
-        vendor.setCreatedAt(LocalDateTime.now());
+        long seq = service.getNextSequence("vendor_seq");
+            vendor.setVendorId(String.format("VNR%03d", seq));
+//        vendor.setCreatedAt(LocalDateTime.now());
         vendorRepository.save(vendor);
 
         VendorResponseDto response = modelMapper.map(vendor, VendorResponseDto.class);
@@ -139,7 +145,9 @@ public class VendorServiceImpl implements VendorService {
             existingVendor.setPassword(requestDto.getPassword());
         }
 
-        existingVendor.setUpdatedAt(LocalDateTime.now());
+//        existingVendor.setUpdatedAt(LocalDateTime.now());
+//        long seq = service.getNextSequence("vendor_seq");
+//        existingVendor.setVendorId(String.format("VNR%03d", seq));
         vendorRepository.save(existingVendor);
 
         VendorResponseDto response = modelMapper.map(existingVendor, VendorResponseDto.class);
@@ -147,12 +155,12 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Transactional
-    public ResponseEntity<Void> deleteVendor(String id) {
-        if (!vendorRepository.existsById(id)) {
-            throw new RuntimeException("Vendor not found with id: " + id);
+    public ResponseEntity<String> deleteVendor(String id) {
+        if (!vendorRepository.findById(id).isPresent()) {
+            throw new VendorNotFoundException("Vendor not found with id: " + id);
         }
         vendorRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("vendor delete successfully",HttpStatus.OK);
     }
 
     // Vendor Verification Operations
@@ -182,7 +190,7 @@ public class VendorServiceImpl implements VendorService {
         }
         Vendor vendor=vendorRepository.findById(id).get();
         vendor.setVerified(true);
-        vendor.setUpdatedAt(LocalDateTime.now());
+//        vendor.setUpdatedAt(LocalDateTime.now());
         Vendor db=vendorRepository.save(vendor);
 
         VendorResponseDto response = modelMapper.map(db, VendorResponseDto.class);
@@ -195,7 +203,7 @@ public class VendorServiceImpl implements VendorService {
                 .orElseThrow(() -> new VendorNotFoundException("Vendor not found with id: " + id));
 
         vendor.setVerified(false);
-        vendor.setUpdatedAt(LocalDateTime.now());
+//        vendor.setUpdatedAt(LocalDateTime.now());
         vendorRepository.save(vendor);
 
         VendorResponseDto response = modelMapper.map(vendor, VendorResponseDto.class);
@@ -214,8 +222,8 @@ public class VendorServiceImpl implements VendorService {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<List<VendorResponseDto>> searchVendorsByName(String name) {
-        List<Vendor> vendors = vendorRepository.findByNameContainingIgnoreCase(name);
+    public ResponseEntity<List<VendorResponseDto>> searchVendorsByName(String firstName) {
+        List<Vendor> vendors = vendorRepository.searchByNameIgnoreCase(firstName);
         List<VendorResponseDto> response = vendors.stream()
                 .map(vendor -> modelMapper.map(vendor, VendorResponseDto.class))
                 .collect(Collectors.toList());
@@ -231,7 +239,7 @@ public class VendorServiceImpl implements VendorService {
                 .orElseThrow(() -> new RuntimeException("Vendor not found with id: " + id));
 
         vendor.setFarmAddress(farmAddress);
-        vendor.setUpdatedAt(LocalDateTime.now());
+//        vendor.setUpdatedAt(LocalDateTime.now());
         vendorRepository.save(vendor);
 
         VendorResponseDto response = modelMapper.map(vendor, VendorResponseDto.class);
@@ -266,7 +274,7 @@ public class VendorServiceImpl implements VendorService {
             vendor.getBankAccounts().add(bankAccount);
         }
 
-        vendor.setUpdatedAt(LocalDateTime.now());
+//        vendor.setUpdatedAt(LocalDateTime.now());
         vendorRepository.save(vendor);
 
         VendorResponseDto response = modelMapper.map(vendor, VendorResponseDto.class);
@@ -287,7 +295,7 @@ public class VendorServiceImpl implements VendorService {
         }
 
         vendor.getBankAccounts().set(accountIndex, bankAccount);
-        vendor.setUpdatedAt(LocalDateTime.now());
+//        vendor.setUpdatedAt(LocalDateTime.now());
         vendorRepository.save(vendor);
 
         VendorResponseDto response = modelMapper.map(vendor, VendorResponseDto.class);
@@ -309,7 +317,7 @@ public class VendorServiceImpl implements VendorService {
         }
 
         vendor.getBankAccounts().remove(accountIndex);
-        vendor.setUpdatedAt(LocalDateTime.now());
+//        vendor.setUpdatedAt(LocalDateTime.now());
         vendorRepository.save(vendor);
 
         VendorResponseDto response = modelMapper.map(vendor, VendorResponseDto.class);
@@ -336,7 +344,7 @@ public class VendorServiceImpl implements VendorService {
         }
 
         vendor.setPassword(newPassword);
-        vendor.setUpdatedAt(LocalDateTime.now());
+//        vendor.setUpdatedAt(LocalDateTime.now());
         vendorRepository.save(vendor);
 
         VendorResponseDto response = modelMapper.map(vendor, VendorResponseDto.class);

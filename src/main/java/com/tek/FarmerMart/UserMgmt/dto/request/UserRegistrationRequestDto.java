@@ -14,5 +14,5 @@ public class UserRegistrationRequestDto {
     private  String confirmPassword;
     private String phoneNo;
     private String alternatePhoneNo;
-    private LocalDateTime createdAt;
+//    private LocalDateTime createdAt;
 }

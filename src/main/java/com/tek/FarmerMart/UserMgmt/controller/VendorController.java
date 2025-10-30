@@ -75,7 +75,7 @@ public class VendorController {
 
     // @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/remove/{id}")
-    public ResponseEntity<Void> deleteVendor(@PathVariable String id) {
+    public ResponseEntity<String> deleteVendor(@PathVariable String id) {
         return vendorService.deleteVendor(id);
     }
 
